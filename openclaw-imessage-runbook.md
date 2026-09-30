@@ -50,6 +50,23 @@ Resulting `channels.imessage` block:
 }
 ```
 
+## Gateway smoke test (40 s run, 2026-09-30 17:15)
+
+The gateway starts cleanly and fails at exactly the expected point:
+
+```text
+[gateway]  agent model: anthropic/claude-opus-5-5 (thinking=medium, fast=off)
+[gateway]  http server listening (15 plugins: ... imessage ...)
+[imessage] [default] starting provider (/opt/homebrew/bin/imsg db=/Users/richardzhu/Library/Messages/chat.db)
+[gateway]  ready
+[imessage] imsg rpc not ready after 10613ms (IMessageRpcRequestError: Database unavailable: code=-32002
+           "The configured Messages database could not be opened read-only. Verify the path and grant
+            Full Disk Access to the supervising process, then retry."
+[imessage] [default] auto-restart attempt 1/10 in 5s
+```
+
+So plugin loading, config, `imsg rpc` spawning and the channel supervisor all work. Step 1 below is the only thing between this and a live channel (plus a model key for replies).
+
 ## Remaining, in order
 
 1. **manual** Grant Full Disk Access: System Settings > Privacy & Security > Full Disk Access, add Terminal (and iTerm / VS Code if you launch from there). Restart the terminal. Verify:
