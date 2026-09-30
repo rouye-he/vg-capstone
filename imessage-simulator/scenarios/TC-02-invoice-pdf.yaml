@@ -1,0 +1,16 @@
+id: TC-02-invoice-pdf
+title: Text + PDF invoice
+sender: "+14125550123"
+chat_id: 42
+messages:
+  - text: "Can you check this invoice?"
+    attachments: [fixtures/invoice_acme_0923.pdf]
+expect:
+  envelope_count: 1
+  attachments[0].filename: invoice_acme_0923.pdf
+  attachments[0].media_type: application/pdf
+  attachments[0].validation: accepted
+  attachments[0].redaction_status: pending
+  attachments[0].size_bytes: 327
+  reply.kind: result
+  reply.reply_target: "chat_id:42"

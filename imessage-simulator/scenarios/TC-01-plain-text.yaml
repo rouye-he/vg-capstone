@@ -1,0 +1,16 @@
+id: TC-01-plain-text
+title: Plain text request
+sender: "+14125550123"
+chat_id: 42
+messages:
+  - text: "Schedule a 30-minute sync with the finance team next Tuesday."
+expect:
+  envelope_count: 1
+  envelope.channel: imessage
+  envelope.text: "Schedule a 30-minute sync with the finance team next Tuesday."
+  envelope.conversation.type: direct
+  envelope.sender.handle_type: phone
+  envelope.sender.actor_role: unresolved
+  envelope.attachments: []
+  reply.kind: result
+  reply.reply_target: "chat_id:42"

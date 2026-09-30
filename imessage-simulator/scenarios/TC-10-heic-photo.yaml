@@ -1,0 +1,16 @@
+id: TC-10-heic-photo
+title: HEIC photo from an iPhone
+sender: "+14125550123"
+chat_id: 42
+messages:
+  - text: "Here's the whiteboard from today's planning session."
+    attachments: [fixtures/photo_iphone.heic]
+expect:
+  envelope_count: 1
+  attachments[0].filename: photo_iphone.heic
+  attachments[0].media_type: image/heic
+  attachments[0].validation: accepted
+  attachments[0].processing_hint: convert_to_jpeg
+  attachments[0].redaction_status: pending
+  reply.kind: result
+  reply.text: "~1 attachment"

@@ -1,0 +1,17 @@
+id: TC-07-unknown-sender
+title: Unknown sender (not the principal)
+# The channel never decides who this is. It still builds the envelope with
+# actor_role: unresolved and lets VG's IAM / OpenClaw pairing decide.
+sender: "+14125559999"
+chat_id: 77
+messages:
+  - text: "Hi, is this the assistant for the finance team? I need the Q3 numbers."
+expect:
+  envelope_count: 1
+  envelope.sender.handle: "+14125559999"
+  envelope.sender.handle_type: phone
+  envelope.sender.actor_id: null
+  envelope.sender.actor_role: unresolved
+  envelope.principal_id: exec_001
+  envelope.conversation.conversation_id: "imessage:chat_id:77"
+  reply.reply_target: "chat_id:77"

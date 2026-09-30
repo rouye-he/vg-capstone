@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vg-capstone/schemas/reply_envelope/0.1",
+  "title": "ReplyEnvelope v0.1",
+  "description": "One outbound reply, routed back to the conversation the request came from.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["correlation_id", "in_reply_to", "channel", "reply_target", "kind", "text", "attachments"],
+  "properties": {
+    "correlation_id": { "type": "string", "pattern": "^corr_[A-Za-z0-9]+$" },
+    "in_reply_to": { "type": "string", "pattern": "^msg_[A-Za-z0-9]+$" },
+    "channel": { "enum": ["imessage", "gmail"] },
+    "reply_target": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["ack", "result", "confirmation_request", "clarification", "error"] },
+    "text": { "type": "string", "minLength": 1 },
+    "attachments": { "type": "array", "items": { "type": "string" } }
+  }
+}

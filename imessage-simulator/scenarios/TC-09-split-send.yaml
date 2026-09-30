@@ -1,0 +1,25 @@
+id: TC-09-split-send
+title: Command, then a URL a few seconds later
+# Finding (OpenClaw docs, "Coalescing split-send DMs"): imsg >= 0.13.1 merges a
+# command and its URL preview into ONE logical message before watch/history
+# returns it, so the channel receives the first row below already coalesced.
+# The ingress must not merge on its own: the second, unrelated message 40 s
+# later is a separate envelope.
+sender: "+14125550123"
+chat_id: 42
+messages:
+  - text: "Read this and give me three takeaways\nhttps://example.com/board-memo-q3"
+    guid: "imsg-guid-SPLIT-0001"
+    sent_at: "+0"
+  - text: "Also, move my 3pm to 4pm."
+    guid: "imsg-guid-SPLIT-0002"
+    sent_at: "+40"
+expect:
+  envelope_count: 2
+  dropped_count: 0
+  envelopes[0].text: "~https://example.com/board-memo-q3"
+  envelopes[0].sent_at: "2026-10-01T14:00:00Z"
+  envelopes[1].text: "Also, move my 3pm to 4pm."
+  envelopes[1].sent_at: "2026-10-01T14:00:40Z"
+  replies[0].kind: result
+  replies[1].kind: result

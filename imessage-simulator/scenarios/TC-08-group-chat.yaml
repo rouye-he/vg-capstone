@@ -1,0 +1,14 @@
+id: TC-08-group-chat
+title: Group chat message (out of MVP scope)
+sender: "+14125550123"
+chat_id: 900
+is_group: true
+messages:
+  - text: "@assistant can you summarize this thread?"
+expect:
+  envelope_count: 1
+  envelope.conversation.type: group
+  envelope.flags.is_group: true
+  envelope.conversation.reply_target: "chat_id:900"
+  reply.kind: clarification
+  reply.text: "~message me directly"

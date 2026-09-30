@@ -1,0 +1,21 @@
+id: TC-06-echo-loop
+title: Assistant's own reply echoed back through chat.db
+# Both ways the echo can show up: the row is flagged is_from_me, or the sender
+# handle is the assistant's own Apple ID. Neither may produce an envelope.
+sender: "+14125550123"
+chat_id: 42
+messages:
+  - text: "What's on my calendar tomorrow?"
+  - text: "[mock] Received your request."
+    is_from_me: true
+    guid: "imsg-guid-ECHO-0001"
+  - text: "[mock] Received your request."
+    sender: "vgcapstonebot@gmail.com"
+    guid: "imsg-guid-ECHO-0002"
+expect:
+  envelope_count: 1
+  dropped_count: 2
+  dropped[0].reason: echo_from_assistant
+  dropped[1].reason: echo_from_assistant
+  envelope.text: "What's on my calendar tomorrow?"
+  reply.kind: result
