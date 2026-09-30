@@ -1,6 +1,6 @@
 # OpenClaw + iMessage runbook (Richard's Mac, 2026-09-30)
 
-Second real-device environment for Phase 1, set up alongside Rouye's Mac. Everything below was run on this machine; items marked **manual** need a person at the keyboard (System Settings dialogs, Apple ID password, API key).
+Second real-device environment for Phase 1, set up alongside Rouye's Mac. Everything below was run on this machine; items marked **manual** need a person at the keyboard (System Settings dialogs, Apple ID password).
 
 ## Machine
 
@@ -32,6 +32,9 @@ openclaw config set channels.imessage.mediaMaxMb 16
 openclaw config set channels.imessage.textChunkLimit 4000
 openclaw config set channels.imessage.configWrites false          # chat cannot rewrite config
 openclaw config set agents.defaults.model '"anthropic/claude-opus-5-5"'
+# Model credential: reuse the Claude Code (Claude Max) login on this Mac instead of a pay-as-you-go API key.
+# Requires `claude auth status --text` to show a logged-in account. Route the model through the claude-cli runtime:
+echo '{ agents: { defaults: { models: { "anthropic/claude-opus-5-5": { agentRuntime: { id: "claude-cli" } } } } } }' | openclaw config patch --stdin
 ```
 
 Resulting `channels.imessage` block:
@@ -73,16 +76,17 @@ So plugin loading, config, `imsg rpc` spawning and the channel supervisor all wo
    ```bash
    imsg chats --limit 5 --json
    ```
-   Today this returns `authorization denied (code: 23)`, which is exactly the Full Disk Access error.
+   Before granting access this returned `authorization denied (code: 23)`. Granted to Visual Studio Code and Terminal on 2026-09-30; now returns the chat list. Note the permission is per app: grant it to whichever app hosts the shell.
 2. **manual** Grant Automation for Messages: the first `imsg send` triggers the prompt.
    ```bash
    imsg send --to <your own number> --text "imsg test"
    ```
-3. **manual** Provide a model credential. No Anthropic key is present on this machine (checked env, shell rc files, `ant` CLI not installed). Either:
+3. Model credential: **done, no API key needed.** OpenClaw's bundled Anthropic plugin can run turns through the installed Claude Code executable and its existing Claude Max login (`claude auth status --text`). Configured with the `agentRuntime: { id: "claude-cli" }` patch above. Verified 2026-09-30:
    ```bash
-   export ANTHROPIC_API_KEY=sk-ant-...   # in ~/.zshrc, then restart the terminal
+   openclaw agent --local --agent main --message "Reply with exactly: OK from OpenClaw" --json
+   # -> terminalReply.text = "OK from OpenClaw", provider anthropic, model claude-opus-5-5
    ```
-   or run `openclaw configure` and pick Anthropic. Check with `openclaw models list --refresh`.
+   Usage draws from the subscription's limits (OpenClaw docs, `docs/providers/anthropic.md`). For a shared production bot, switch to an `ANTHROPIC_API_KEY` later; for Phase 1 experiments the subscription route is enough.
 4. Start the gateway and confirm the channel is up:
    ```bash
    openclaw gateway            # foreground, watch the log
