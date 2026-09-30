@@ -115,3 +115,16 @@ So plugin loading, config, `imsg rpc` spawning and the channel supervisor all wo
 - Group chats are disabled at the channel level for the MVP. Re-enabling them later means setting `groupPolicy: allowlist`, `groupAllowFrom`, and a `groups` map, and mention gating is derived from the agent's identity name.
 - Inbound recovery after a restart is built into the plugin (durable ingress journal keyed by Apple GUID, `since_rowid` replay, stale backlog fence). Option C from the design doc would have to rebuild all of this.
 - Split-send (command then URL) is coalesced by imsg 0.13.1+ before OpenClaw sees it. No channel-side setting.
+
+## Real-device test log (2026-09-30, Richard's Mac, personal number as stand-in for the bot number)
+
+| Step | Command | Result |
+| --- | --- | --- |
+| Full Disk Access | `imsg chats --limit 5 --json` | chat list returned |
+| Automation permission | `imsg send --to <own number> --text "imsg test"` | `sent`, arrived on phone, no prompt left pending |
+| Model credential | `openclaw agent --local --agent main --message "Reply with exactly: OK from OpenClaw" --json` | `OK from OpenClaw` via claude-cli runtime (Claude Max login, no API key) |
+| Outbound path OpenClaw -> iMessage | `openclaw agent --local --agent main --channel imessage --deliver --to <own number> --message "..."` | `deliveryStatus.status = sent`; model-written sentence visible in Messages (row 1573/1574 in chat 294) |
+| Raw-event mode on real data | `imsg history --chat-id 294 --limit 20 --attachments --json \| python -m imsg_sim.raw_events -` | 2 OK (received copies), 2 DROP `echo_from_assistant` (own sends), no schema errors |
+
+Not yet run: inbound path with a persistent gateway (`openclaw gateway`, then a message from a second person, `openclaw pairing approve imessage <CODE>`, reply). Needs the gateway in a foreground terminal and a sender who is not this Mac's Apple ID, because `is_from_me` rows are dropped by design.
+
