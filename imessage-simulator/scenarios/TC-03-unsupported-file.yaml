@@ -1,0 +1,12 @@
+id: TC-03-unsupported-file
+title: Unsupported file type (.zip)
+messages:
+  - text: "Here are the receipts."
+    attachments: [fixtures/archive.zip]
+expect:
+  envelope_count: 1
+  attachments[0].validation: rejected
+  attachments[0].reject_reason: unsupported_type
+  attachments[0].content_ref: null
+  reply.kind: error
+  reply.text: "~isn't supported"

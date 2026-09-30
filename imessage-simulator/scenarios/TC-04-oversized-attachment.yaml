@@ -1,0 +1,14 @@
+id: TC-04-oversized-attachment
+title: Attachment over 16 MB
+messages:
+  - text: "Full-resolution scan attached."
+    attachments:
+      - filename: scan_q3.pdf
+        media_type: application/pdf
+        size_bytes: 17825792   # 17 MB, declared; no real file needed
+expect:
+  envelope_count: 1
+  attachments[0].validation: rejected
+  attachments[0].reject_reason: too_large
+  reply.kind: error
+  reply.text: "~larger than 16 MB"

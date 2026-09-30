@@ -1,0 +1,11 @@
+id: TC-05-duplicate-delivery
+title: Same message delivered twice
+messages:
+  - text: "Follow up with Dana about the contract."
+    guid: "imsg-guid-DUP-0001"
+  - text: "Follow up with Dana about the contract."
+    guid: "imsg-guid-DUP-0001"
+expect:
+  envelope_count: 1
+  dropped_count: 1
+  dropped[0].reason: duplicate
