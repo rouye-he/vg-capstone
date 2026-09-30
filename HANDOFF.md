@@ -16,6 +16,7 @@ Research is done, the iMessage Simulator runs with 5/5 scenarios passing, and a 
 | `imessage-simulator/` | Working code: JSON Schemas, channel ingress, mock assistant, scenario runner, raw-event mode, TC-01 to TC-10, unit tests |
 | `openclaw-imessage-runbook.md` | Exact install and config steps run on Richard's Mac, and the manual steps that remain |
 | `PHASE1_STATUS.md` | Checklist against the sponsor's Phase 1 ask, security controls, questions for VG, reply draft |
+| `openclaw-workspace/` | Meeting-scheduler skill and synthetic contacts/calendars for demos, with test results |
 | `HANDOFF.md` | This file |
 
 ## Key findings

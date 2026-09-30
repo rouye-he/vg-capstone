@@ -1,0 +1,18 @@
+{
+  "_note": "Synthetic data for the CMU x Virtual Gold capstone experiment. Names are team roles, phone numbers are 555 test numbers, emails are example.com.",
+  "primary_user": {
+    "name": "Richard Zhu",
+    "role": "Capstone student, Enterprise Team",
+    "phone": "+14125550100",
+    "email": "richard@example.com",
+    "timezone": "America/New_York",
+    "working_hours": "09:00-18:00 Mon-Fri"
+  },
+  "contacts": [
+    {"name": "Aarvin George", "role": "Sponsor, Virtual Gold", "phone": "+14125550101", "email": "aarvin@example.com", "relationship": "external", "timezone": "America/New_York"},
+    {"name": "Alex Chen", "role": "Engineer, Virtual Gold", "phone": "+14125550102", "email": "alex@example.com", "relationship": "external", "timezone": "America/New_York"},
+    {"name": "Indepal Singh", "role": "Product, Virtual Gold", "phone": "+14125550103", "email": "indepal@example.com", "relationship": "external", "timezone": "America/Los_Angeles"},
+    {"name": "Rouye He", "role": "Capstone student, Enterprise Team", "phone": "+14125550104", "email": "rouye@example.com", "relationship": "teammate", "timezone": "America/New_York"},
+    {"name": "Priya Nair", "role": "Capstone student, Enterprise Team", "phone": "+14125550105", "email": "priya@example.com", "relationship": "teammate", "timezone": "America/New_York"}
+  ]
+}

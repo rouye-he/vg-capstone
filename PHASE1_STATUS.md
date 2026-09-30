@@ -19,6 +19,7 @@
 | 10 | Code in a private team repo | Local git repo created | Remote push needs a team GitHub org / repo name |
 | 11 | Questions to Virtual Gold | Drafted below | Send before the meeting |
 | 12 | NDA | Open | Each member signs individually |
+| 13 | One real capability to demo (meeting scheduling on synthetic data) | Done today | `openclaw-workspace/`: skill + calendar CLI, 2/2 scenarios (book free slot, refuse conflict) |
 
 ## What "secure" means in this design, and what is already enforced
 
