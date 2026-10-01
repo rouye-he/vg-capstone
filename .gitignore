@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 # never commit real captures with personal data
 imessage-simulator/fixtures/imsg_real_capture*.ndjson
+openclaw-workspace/roles/roster.local.json

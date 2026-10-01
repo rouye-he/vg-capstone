@@ -15,7 +15,11 @@ ROLES = {
                 "tools": {"deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:messaging", "group:nodes", "group:ui"]},
                 "senderDeny": ["group:runtime", "group:fs"]},
 }
-people = json.load(open(os.path.join(HERE, "roster.json")))["people"]
+# roster.local.json (git-ignored) overrides roster.json so real phone numbers never enter the repo.
+_roster = os.path.join(HERE, "roster.local.json")
+if not os.path.exists(_roster): _roster = os.path.join(HERE, "roster.json")
+people = json.load(open(_roster))["people"]
+print(f"roster: {_roster}")
 unknown = [p for p in people if p["role"] not in ROLES or p["role"] == "main"]
 assert not unknown, f"bad roles: {unknown}"
 entries = {}
