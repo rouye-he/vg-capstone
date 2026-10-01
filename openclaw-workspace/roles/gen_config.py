@@ -7,9 +7,9 @@ session.dmScope per-peer: every person gets their own conversation, even within 
 import json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROLES = {
-    "main":    {"name": "Owner",       "skills": ["meeting-scheduler", "expense-ledger", "issue-tracker", "github", "apple-reminders", "weather"]},
+    "main":    {"name": "Owner",       "skills": ["meeting-scheduler", "expense-ledger", "issue-tracker", "gmail-digest", "github", "apple-reminders", "weather"]},
     "eng":     {"name": "Engineering", "skills": ["issue-tracker", "meeting-scheduler", "weather"]},  # swap issue-tracker for github once `gh auth login` is done
-    "finance": {"name": "Finance",     "skills": ["expense-ledger", "meeting-scheduler", "weather"]},
+    "finance": {"name": "Finance",     "skills": ["expense-ledger", "gmail-digest", "meeting-scheduler", "weather"]},
     "ops":     {"name": "Operations",  "skills": ["meeting-scheduler", "apple-reminders", "weather"]},
     "guest":   {"name": "Guest",       "skills": ["weather"],
                 "tools": {"deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:nodes", "group:ui"]},

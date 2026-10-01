@@ -82,3 +82,29 @@ Role table today:
 | B | finance | Show pending invoices and approve INV-1003 | Listed 3 pending with amounts, approved INV-1003 with `--by "Priya Nair"`, ledger file updated, others left pending |
 
 Caveat: with the `claude-cli` runtime the model process has native tools; skill allowlists are a visibility filter and `tools.deny` is enforced on native calls by OpenClaw's canonical policy. For a production bot, add per-agent exec allowlists (`openclaw approvals`) or the sandbox. GitHub skill needs `gh auth login` on this Mac before Engineering can use it; apple-reminders needs the Reminders permission prompt on first use.
+
+## Gmail digest (per-user consent, Finance role)
+
+`skills/gmail-digest/` lets an authorised person connect **their own** Gmail from the chat and ask the assistant to classify recent mail, count each category and summarise. Read-only scope (`gmail.readonly`); tokens are stored per requester handle in `~/.openclaw/google/tokens/<handle>.json` (mode 600) and the skill is told to use only the current requester's token.
+
+### One-time setup by the owner (about 10 minutes)
+
+1. Go to https://console.cloud.google.com/ and create a project (any name, e.g. `capstone-bot`).
+2. APIs & Services > Library > enable **Gmail API**.
+3. APIs & Services > OAuth consent screen: External, app name `Enterprise Team Assistant`, your email as support/developer contact. Leave it in **Testing**. Under **Test users** add the Gmail address of every person who will connect (Google limits testing apps to listed test users).
+4. APIs & Services > Credentials > Create credentials > **OAuth client ID** > Application type **Desktop app**. Download the JSON.
+5. Save it as `~/.openclaw/google/client_secret.json` on the gateway Mac:
+   ```bash
+   mkdir -p ~/.openclaw/google && mv ~/Downloads/client_secret_*.json ~/.openclaw/google/client_secret.json && chmod 600 ~/.openclaw/google/client_secret.json
+   ```
+No gateway restart is needed; the skill checks the file on each call.
+
+### What the user does (over iMessage)
+
+1. "Connect my Gmail." The assistant replies with a Google consent link.
+2. They open it on the phone, pick the account, allow read-only access. The browser is redirected to `http://localhost:8765/?code=...`, which shows an error page (nothing listens there on purpose).
+3. They copy that page's full address and send it back. The assistant exchanges the one-time code for a token and confirms the connected address.
+4. "Organise my last 50 emails" (or "summarise unread mail from this week"). The assistant replies with category counts and a short digest.
+5. "Disconnect my Gmail" removes the token.
+
+Notes: the pasted redirect URL carries a one-time code that is valid for ~10 minutes and is bound to a PKCE verifier stored on the Mac, so it is useless to anyone intercepting the chat. The category guess in the script is a keyword first pass; the model does the final grouping and summary.
