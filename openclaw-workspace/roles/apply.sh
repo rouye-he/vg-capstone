@@ -8,7 +8,7 @@ rm -rf ~/.openclaw/workspace/skills/meeting-scheduler      # now lives in the sh
 cp "$HERE"/data/*.json ~/.openclaw/workspace/data/
 cp "$HERE/workspaces/main/SOUL.md" ~/.openclaw/workspace/SOUL.md
 for w in eng finance ops guest; do mkdir -p ~/.openclaw/workspace-$w; cp "$HERE/workspaces/$w/"*.md ~/.openclaw/workspace-$w/; done
-python3 "$HERE/roles/gen_config.py"
-openclaw config patch --file "$HERE/roles/openclaw.roles.json5"
+OUT=$(python3 "$HERE/roles/gen_config.py" | tee /dev/stderr | sed -n "s/^OUT=//p")
+openclaw config patch --file "$OUT"
 openclaw config validate
 openclaw agents list --bindings
