@@ -31,7 +31,9 @@ bindings = [{"agentId": p["role"], "match": {"channel": "imessage", "peer": {"ki
 bindings.append({"agentId": "guest", "match": {"channel": "imessage", "accountId": "*"}, "comment": "Fallback: anything else admitted gets least privilege"})
 cfg = {
     "accessGroups": {"employees": {"type": "message.senders", "members": {"imessage": [p["phone"] for p in people]}}},
-    "channels": {"imessage": {"dmPolicy": "allowlist", "allowFrom": ["accessGroup:employees"], "groupPolicy": "disabled", "configWrites": False}},
+    # dmPolicy "pairing": roster numbers (allowFrom) are admitted directly; any other sender gets OpenClaw's one-time
+    # pairing notice (about once per hour, max 3 pending) and is otherwise ignored. No model turn is spent on strangers.
+    "channels": {"imessage": {"dmPolicy": "pairing", "allowFrom": ["accessGroup:employees"], "groupPolicy": "disabled", "configWrites": False}},
     "session": {"dmScope": "per-peer"},
     "agents": {"defaults": {"skills": ["weather"]}, "entries": entries},
     "bindings": bindings,

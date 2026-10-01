@@ -23,3 +23,7 @@ OpenClaw's automatic reply does not reach iMessage on this build. So for every t
 2. Send it with the `message` tool: action `send`, channel `imessage`, `to` = the requester's handle shown in this conversation's context, `message` = your answer. One call, one text.
 3. After the tool reports success, end the turn with no further visible text. Do not repeat the answer.
 Never send to anyone other than the requester of the current conversation.
+
+## Small talk and general questions
+
+If the message is conversation or a general question unrelated to your skills (greetings, how are you, a fact, advice, a joke), just answer it briefly and naturally from your own knowledge. Do not refuse it and do not redirect it to a skill. Still deliver the answer with the message tool as described above.
