@@ -1,0 +1,11 @@
+{
+  "_note": "Who may text the bot and what role they get. One line per person; roles are defined in gen_config.py. Phone numbers are synthetic 555 placeholders; replace with real iMessage handles for a live demo.",
+  "people": [
+    {"name": "Alex Chen",     "phone": "+14125550102", "role": "eng"},
+    {"name": "Sam Okafor",    "phone": "+14125550106", "role": "eng"},
+    {"name": "Priya Nair",    "phone": "+14125550105", "role": "finance"},
+    {"name": "Mei Lin",       "phone": "+14125550107", "role": "finance"},
+    {"name": "Rouye He",      "phone": "+14125550104", "role": "ops"},
+    {"name": "Indepal Singh", "phone": "+14125550103", "role": "guest"}
+  ]
+}

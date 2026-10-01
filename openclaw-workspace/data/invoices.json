@@ -1,0 +1,10 @@
+{
+  "_note": "Synthetic invoices for the capstone finance role demo. Vendors and amounts are invented.",
+  "invoices": [
+    {"id": "INV-1001", "vendor": "Acme Cloud Hosting", "amount_usd": 1240.00, "due": "2026-10-10", "status": "approved", "submitted_by": "Alex Chen", "approved_by": "Priya Nair", "memo": "September compute"},
+    {"id": "INV-1002", "vendor": "Pittsburgh Office Supply", "amount_usd": 312.45, "due": "2026-10-08", "status": "pending", "submitted_by": "Rouye He", "approved_by": null, "memo": "Whiteboards and markers"},
+    {"id": "INV-1003", "vendor": "Datadog Monitoring", "amount_usd": 890.00, "due": "2026-10-15", "status": "pending", "submitted_by": "Alex Chen", "approved_by": null, "memo": "October monitoring seats"},
+    {"id": "INV-1004", "vendor": "Figma", "amount_usd": 540.00, "due": "2026-10-20", "status": "pending", "submitted_by": "Indepal Singh", "approved_by": null, "memo": "Design seats x3"},
+    {"id": "INV-1005", "vendor": "Apple Business", "amount_usd": 2199.00, "due": "2026-10-05", "status": "rejected", "submitted_by": "Rouye He", "approved_by": "Priya Nair", "memo": "Mac mini for bot host (rejected: use existing hardware)"}
+  ]
+}

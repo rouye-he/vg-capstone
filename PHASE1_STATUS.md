@@ -20,6 +20,7 @@
 | 11 | Questions to Virtual Gold | Drafted below | Send before the meeting |
 | 12 | NDA | Open | Each member signs individually |
 | 13 | One real capability to demo (meeting scheduling on synthetic data) | Done today | `openclaw-workspace/`: skill + calendar CLI, 2/2 scenarios (book free slot, refuse conflict) |
+| 14 | Identity isolation: roster allowlist, phone -> role agent routing, per-role skills, per-sender tool denies, per-person sessions | Done today | `openclaw-workspace/roles/`, README section "Identity isolation", 2/2 tests (guest denied GitHub, finance approved invoice) |
 
 ## What "secure" means in this design, and what is already enforced
 
