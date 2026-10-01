@@ -15,7 +15,7 @@
 | 6 | Simulator raw-event mode (real `imsg` JSON) | Done today | `imsg_sim/raw_events.py`, field names verified against the plugin source |
 | 7 | Second real-Mac environment (Richard) | Installed and configured | `openclaw-imessage-runbook.md`; permissions granted, model runs on the Claude Max login via `claude-cli` runtime, gateway pairing test pending |
 | 8 | Real-Mac environment (Rouye) | Blocked | New Apple ID will not activate iMessage; retry after 24 to 48 h, then Apple Support, or use an established Apple ID |
-| 9 | First real message end to end through OpenClaw | Outbound done, inbound pending | OpenClaw reply delivered over iMessage and validated by raw-event mode (runbook test log). Inbound needs a gateway run plus a second sender |
+| 9 | First real message end to end through OpenClaw | Done 2026-09-30 | Classmate as Finance: 5 requests answered or refused per role over iMessage; unknown number ingested and ignored. Needed a workaround for an OpenClaw 2026.9.7 reply bug, see runbook |
 | 10 | Code in a private team repo | Local git repo created | Remote push needs a team GitHub org / repo name |
 | 11 | Questions to Virtual Gold | Drafted below | Send before the meeting |
 | 12 | NDA | Open | Each member signs individually |

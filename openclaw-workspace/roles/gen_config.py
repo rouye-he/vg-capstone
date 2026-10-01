@@ -12,7 +12,7 @@ ROLES = {
     "finance": {"name": "Finance",     "skills": ["expense-ledger", "meeting-scheduler", "weather"]},
     "ops":     {"name": "Operations",  "skills": ["meeting-scheduler", "apple-reminders", "weather"]},
     "guest":   {"name": "Guest",       "skills": ["weather"],
-                "tools": {"deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:messaging", "group:nodes", "group:ui"]},
+                "tools": {"deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:nodes", "group:ui"]},
                 "senderDeny": ["group:runtime", "group:fs"]},
 }
 # roster.local.json (git-ignored) overrides roster.json so real phone numbers never enter the repo.
@@ -35,7 +35,9 @@ cfg = {
     "session": {"dmScope": "per-peer"},
     "agents": {"defaults": {"skills": ["weather"]}, "entries": entries},
     "bindings": bindings,
-    "tools": {"toolsBySender": {f'e164:{p["phone"]}': {"deny": ROLES[p["role"]]["senderDeny"]} for p in people if "senderDeny" in ROLES[p["role"]]}},
+    "tools": {"message": {"actions": {"allow": ["send", "reply"]}, "broadcast": {"enabled": False},
+              "crossContext": {"allowWithinProvider": False, "allowAcrossProviders": False}},
+              "toolsBySender": {f'e164:{p["phone"]}': {"deny": ROLES[p["role"]]["senderDeny"]} for p in people if "senderDeny" in ROLES[p["role"]]}},
 }
 out = os.path.join(HERE, "openclaw.roles.local.json5" if _roster.endswith("roster.local.json") else "openclaw.roles.json5")
 with open(out, "w") as f:

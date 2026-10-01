@@ -128,3 +128,36 @@ So plugin loading, config, `imsg rpc` spawning and the channel supervisor all wo
 
 Not yet run: inbound path with a persistent gateway (`openclaw gateway`, then a message from a second person, `openclaw pairing approve imessage <CODE>`, reply). Needs the gateway in a foreground terminal and a sender who is not this Mac's Apple ID, because `is_from_me` rows are dropped by design.
 
+## Inbound end-to-end test and the OpenClaw 2026.9.7 reply bug (2026-09-30 evening)
+
+Setup: Richard's Apple ID hosts the bot; a classmate's real number is on the roster as **Finance**; a second person's number is not on the roster. Gateway run in a foreground terminal.
+
+### What failed first
+
+Every inbound message was admitted, routed to the right agent, and answered by the model, but the automatic reply never left the Mac:
+
+```
+[imessage] imessage final reply failed: PlatformMessageNotDispatchedError: The reply channel changed or cannot preserve its sender; delivery was not started.
+```
+
+Root cause, verified against the shipped code: OpenClaw **2026.9.7** (released 2026-09-30) added a durable-delivery guard that requires a `prepareRuntimeHandoff` callback from the channel adapter whenever the agent turn ran in a different plugin runtime than the gateway. Only the Telegram adapter implements it; iMessage and WhatsApp do not. The guard string is absent from 2026.9.6, 2026.9.5 and 2026.8.33. Open upstream issues: openclaw/openclaw #161976 and #161942 (P1, no fix version). Things that did **not** help: restarting, moving the sender to the `main` agent, writing the auto-enabled `anthropic` plugin into config, `doctor --fix`. Downgrading to 2026.9.6 is blocked because 2026.9.7 already migrated `~/.openclaw/state` to a newer schema (a full copy of the state dir from before the attempt is at `~/.openclaw-backup-2026-09-30-v9.7`).
+
+### Workaround that works
+
+Explicit sends are not subject to the guard. So every role prompt (`openclaw-workspace/workspaces/*/SOUL.md`) now tells the agent to deliver its answer itself with the `message` tool (action `send`, channel `imessage`, to the requester) and then end the turn with no visible text. Guard rails in config (`roles/gen_config.py`): `tools.message.actions.allow = [send, reply]`, `broadcast.enabled = false`, `crossContext.allowWithinProvider = false`, `crossContext.allowAcrossProviders = false`, so the tool can only reach the current conversation. The guest role keeps every other deny. The failed automatic reply still logs one ERROR line per turn; it is harmless.
+
+Caveat: the `claude-cli` runtime resumes the sender's Claude Code session, so a prompt change does not reach an existing conversation. Changing `session.dmScope` (now `per-channel-peer`) plus a gateway restart gave the tester a fresh session key. For a demo, restart the gateway after any SOUL/skill change and expect the first message from each person to start a new session.
+
+### Results
+
+| Test | Sender | Result |
+| --- | --- | --- |
+| Who are you | Finance | Replied via message tool, introduced itself as the Finance assistant, in English |
+| Pending invoices, approve one | Finance | Listed, approved with `--by` set to the Finance person |
+| Availability with Alex next Tuesday | Finance | Gave the free windows |
+| Book it at 3:30 | Finance | Refused: only the owner can book, suggested asking Richard |
+| List open GitHub issues | Finance | Refused: GitHub is not available to Finance |
+| "现在呢" | Not on roster | Ingested (`channel_ingress_events` row for `chat:296`, status `completed`, 0 attempts), no agent turn, no reply. The drop is silent at the default log level |
+
+Two operational notes: the allowlist drop writes no INFO log line, so the evidence for "unknown sender gets nothing" is the ingress table or the absence of a `cli exec` line. And a copy of `openclaw.sqlite` without its `-wal` file misses recent rows; I misread a stale copy as a stalled channel and asked for one unnecessary restart.
+
