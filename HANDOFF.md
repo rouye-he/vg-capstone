@@ -2,11 +2,11 @@
 
 **From:** Rouye He · **As of:** 2026-09-30 · **Project:** CMU × Virtual Gold Enterprise AI Capstone
 
-> **Update 2026-09-30 (Richard):** TC-06 to TC-10 and raw-event mode are done (10/10 scenarios, 22 tests). A second real-Mac environment is installed and configured, see `openclaw-imessage-runbook.md`. Current checklist, sponsor questions and a reply draft are in `PHASE1_STATUS.md`.
+> **Update 2026-09-30 (Richard):** TC-06 to TC-10 and raw-event mode are done (10/10 scenarios, 22 tests). A real-Mac deployment on Richard's Apple ID went end to end over iMessage with two testers (Finance and Engineering roles) and an unknown number, see the runbook's inbound test section. Identity isolation (roster allowlist, phone-to-role routing, per-role skills, per-person sessions) and four demo skills live in `openclaw-workspace/`. The channel is left disabled in config until the next session. Checklist, sponsor questions and a reply draft: `PHASE1_STATUS.md`.
 
 ## Status in one line
 
-Research is done, the iMessage Simulator runs with 5/5 scenarios passing, and a real-device deployment on a Mac is set up except for one blocker: the new Apple ID cannot yet activate iMessage.
+Research is done, the Simulator passes 10/10 scenarios and 22 tests, and a real-device deployment answered role-scoped requests over iMessage; the only open item on the device side is a dedicated Apple ID for the bot (Rouye's new account cannot yet activate iMessage, Richard's personal account was used as a stand-in).
 
 ## What's in this package
 

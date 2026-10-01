@@ -1,0 +1,12 @@
+# Repo-wide Python conventions (PEP 8 via black + ruff). Run before committing:
+#   black -l 120 . && ruff check --select E,F,W,I --line-length 120 --fix .
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

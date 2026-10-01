@@ -4,46 +4,110 @@ Layer 1 accessGroups/allowlist: only roster phones are admitted.
 Layer 2 bindings: each phone routes to its role's agent (own workspace, role prompt, skill allowlist).
 Layer 3 toolsBySender: per-phone tool denies for low-trust roles.
 session.dmScope per-peer: every person gets their own conversation, even within the same role."""
-import json, os
+
+import json
+import os
+
+IMESSAGE_ENABLED = False
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROLES = {
-    "main":    {"name": "Owner",       "skills": ["meeting-scheduler", "expense-ledger", "issue-tracker", "gmail-digest", "github", "apple-reminders", "weather"]},
-    "eng":     {"name": "Engineering", "skills": ["issue-tracker", "meeting-scheduler", "weather"]},  # swap issue-tracker for github once `gh auth login` is done
-    "finance": {"name": "Finance",     "skills": ["expense-ledger", "gmail-digest", "meeting-scheduler", "weather"]},
-    "ops":     {"name": "Operations",  "skills": ["meeting-scheduler", "apple-reminders", "weather"]},
-    "guest":   {"name": "Guest",       "skills": ["weather"],
-                "tools": {"deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:nodes", "group:ui"]},
-                "senderDeny": ["group:runtime", "group:fs"]},
+    "main": {
+        "name": "Owner",
+        "skills": [
+            "meeting-scheduler",
+            "expense-ledger",
+            "issue-tracker",
+            "gmail-digest",
+            "github",
+            "apple-reminders",
+            "weather",
+        ],
+    },
+    "eng": {
+        "name": "Engineering",
+        "skills": ["issue-tracker", "meeting-scheduler", "weather"],
+    },  # swap issue-tracker for github once `gh auth login` is done
+    "finance": {"name": "Finance", "skills": ["expense-ledger", "gmail-digest", "meeting-scheduler", "weather"]},
+    "ops": {"name": "Operations", "skills": ["meeting-scheduler", "apple-reminders", "weather"]},
+    "guest": {
+        "name": "Guest",
+        "skills": ["weather"],
+        "tools": {
+            "deny": ["group:runtime", "group:fs", "group:sessions", "group:automation", "group:nodes", "group:ui"]
+        },
+        "senderDeny": ["group:runtime", "group:fs"],
+    },
 }
 # roster.local.json (git-ignored) overrides roster.json so real phone numbers never enter the repo.
 _roster = os.path.join(HERE, "roster.local.json")
-if not os.path.exists(_roster): _roster = os.path.join(HERE, "roster.json")
+if not os.path.exists(_roster):
+    _roster = os.path.join(HERE, "roster.json")
 people = json.load(open(_roster))["people"]
 print(f"roster: {_roster}")
 unknown = [p for p in people if p["role"] not in ROLES or p["role"] == "main"]
 assert not unknown, f"bad roles: {unknown}"
 entries = {}
 for rid, r in ROLES.items():
-    e = {"name": r["name"], "workspace": "~/.openclaw/workspace" if rid == "main" else f"~/.openclaw/workspace-{rid}", "skills": r["skills"]}
-    if "tools" in r: e["tools"] = r["tools"]
+    e = {
+        "name": r["name"],
+        "workspace": "~/.openclaw/workspace" if rid == "main" else f"~/.openclaw/workspace-{rid}",
+        "skills": r["skills"],
+    }
+    if "tools" in r:
+        e["tools"] = r["tools"]
     entries[rid] = e
-bindings = [{"agentId": p["role"], "match": {"channel": "imessage", "peer": {"kind": "direct", "id": p["phone"]}}, "comment": f'{p["name"]}, {ROLES[p["role"]]["name"]}'} for p in people]
-bindings.append({"agentId": "guest", "match": {"channel": "imessage", "accountId": "*"}, "comment": "Fallback: anything else admitted gets least privilege"})
+bindings = [
+    {
+        "agentId": p["role"],
+        "match": {"channel": "imessage", "peer": {"kind": "direct", "id": p["phone"]}},
+        "comment": f'{p["name"]}, {ROLES[p["role"]]["name"]}',
+    }
+    for p in people
+]
+bindings.append(
+    {
+        "agentId": "guest",
+        "match": {"channel": "imessage", "accountId": "*"},
+        "comment": "Fallback: anything else admitted gets least privilege",
+    }
+)
 cfg = {
     "accessGroups": {"employees": {"type": "message.senders", "members": {"imessage": [p["phone"] for p in people]}}},
     # dmPolicy "pairing": roster numbers (allowFrom) are admitted directly; any other sender gets OpenClaw's one-time
     # pairing notice (about once per hour, max 3 pending) and is otherwise ignored. No model turn is spent on strangers.
-    "channels": {"imessage": {"dmPolicy": "pairing", "allowFrom": ["accessGroup:employees"], "groupPolicy": "disabled", "configWrites": False}},
+    # IMESSAGE_ENABLED: True lets the gateway read and reply over iMessage.
+    # False keeps everything installed but inert.
+    "channels": {
+        "imessage": {
+            "enabled": IMESSAGE_ENABLED,
+            "dmPolicy": "pairing",
+            "allowFrom": ["accessGroup:employees"],
+            "groupPolicy": "disabled",
+            "configWrites": False,
+        }
+    },
     "session": {"dmScope": "per-peer"},
     "agents": {"defaults": {"skills": ["weather"]}, "entries": entries},
     "bindings": bindings,
-    "tools": {"message": {"actions": {"allow": ["send", "reply"]}, "broadcast": {"enabled": False},
-              "crossContext": {"allowWithinProvider": False, "allowAcrossProviders": False}},
-              "toolsBySender": {f'e164:{p["phone"]}': {"deny": ROLES[p["role"]]["senderDeny"]} for p in people if "senderDeny" in ROLES[p["role"]]}},
+    "tools": {
+        "message": {
+            "actions": {"allow": ["send", "reply"]},
+            "broadcast": {"enabled": False},
+            "crossContext": {"allowWithinProvider": False, "allowAcrossProviders": False},
+        },
+        "toolsBySender": {
+            f'e164:{p["phone"]}': {"deny": ROLES[p["role"]]["senderDeny"]}
+            for p in people
+            if "senderDeny" in ROLES[p["role"]]
+        },
+    },
 }
-out = os.path.join(HERE, "openclaw.roles.local.json5" if _roster.endswith("roster.local.json") else "openclaw.roles.json5")
+out = os.path.join(
+    HERE, "openclaw.roles.local.json5" if _roster.endswith("roster.local.json") else "openclaw.roles.json5"
+)
 with open(out, "w") as f:
     f.write("// GENERATED by roles/gen_config.py from roles/roster.json. Edit those, not this file.\n")
-    json.dump(cfg, f, indent=2); f.write("\n")
+    json.dump(cfg, f, indent=2)
+    f.write("\n")
 print(f"OUT={out}")
 print(f"wrote {out}: {len(people)} people, {len(ROLES)} roles, {len(bindings)} bindings")

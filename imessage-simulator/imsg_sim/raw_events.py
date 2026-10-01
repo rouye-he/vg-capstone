@@ -105,8 +105,9 @@ def _parse_time(value: Any) -> datetime:
     return datetime.now(timezone.utc)
 
 
-def process_records(records: Iterable[dict[str, Any]], ingress: Ingress | None = None
-                    ) -> Iterator[tuple[dict[str, Any], IngressResult, dict[str, Any] | None]]:
+def process_records(
+    records: Iterable[dict[str, Any]], ingress: Ingress | None = None
+) -> Iterator[tuple[dict[str, Any], IngressResult, dict[str, Any] | None]]:
     ingress = ingress or Ingress(principal_id=PRINCIPAL_ID, assistant_handles=set(DEFAULT_ASSISTANT_HANDLES))
     for rec in records:
         raw = from_imsg(rec)
@@ -120,8 +121,10 @@ def _summary(raw: dict[str, Any], result: IngressResult, reply: dict[str, Any] |
         return f"DROP  guid={raw['guid']} chat={raw['chat_id']} reason={result.reason}"
     env = result.envelope
     atts = ",".join(f"{a['media_type']}:{a['validation']}" for a in env["attachments"]) or "-"
-    return (f"OK    {env['message_id']} chat={raw['chat_id']} type={env['conversation']['type']} "
-            f"text_len={len(env['text'])} attachments={atts} reply={reply['kind'] if reply else '-'}")
+    return (
+        f"OK    {env['message_id']} chat={raw['chat_id']} type={env['conversation']['type']} "
+        f"text_len={len(env['text'])} attachments={atts} reply={reply['kind'] if reply else '-'}"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -129,8 +132,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("source", nargs="?", default="-", help="NDJSON file, or - for stdin")
     parser.add_argument("--live", action="store_true", help="spawn `imsg watch --json --attachments`")
     parser.add_argument("--chat-id", type=int, help="with --live: only this chat rowid")
-    parser.add_argument("--assistant-handle", action="append", default=[],
-                        help="handle(s) used by the assistant's own Apple ID (echo protection)")
+    parser.add_argument(
+        "--assistant-handle",
+        action="append",
+        default=[],
+        help="handle(s) used by the assistant's own Apple ID (echo protection)",
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="print full envelopes (includes text)")
     args = parser.parse_args(argv)
 

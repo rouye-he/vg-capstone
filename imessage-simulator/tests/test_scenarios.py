@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from imsg_sim.ingress import Ingress
 from imsg_sim.runner import ROOT, check, run_scenario
 
@@ -43,6 +42,7 @@ def test_heic_gets_conversion_hint_but_pdf_does_not():
 
 def test_dedupe_window_expires_after_24h():
     from datetime import datetime, timedelta, timezone
+
     ingress = Ingress(principal_id="exec_001")
     t0 = datetime(2026, 10, 1, tzinfo=timezone.utc)
     raw = {"guid": "g-late", "chat_id": 1, "sender": "+14125550123", "text": "hi"}

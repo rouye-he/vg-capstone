@@ -30,9 +30,11 @@ PRINCIPAL_ID = "exec_001"
 ASSISTANT_HANDLE = "vgcapstonebot@gmail.com"
 
 _ENVELOPE_SCHEMA = Draft202012Validator(
-    json.loads((ROOT / "schemas/message_envelope.schema.json").read_text()), format_checker=FormatChecker())
+    json.loads((ROOT / "schemas/message_envelope.schema.json").read_text()), format_checker=FormatChecker()
+)
 _REPLY_SCHEMA = Draft202012Validator(
-    json.loads((ROOT / "schemas/reply_envelope.schema.json").read_text()), format_checker=FormatChecker())
+    json.loads((ROOT / "schemas/reply_envelope.schema.json").read_text()), format_checker=FormatChecker()
+)
 
 _ALIASES = [("envelope.", "envelopes[0]."), ("reply.", "replies[0]."), ("attachments[", "envelopes[0].attachments[")]
 
@@ -109,7 +111,7 @@ def _resolve_attachment(att: Any) -> dict[str, Any]:
 def _get(obj: Any, path: str) -> Any:
     for short, full in _ALIASES:
         if path.startswith(short):
-            path = full + path[len(short):]
+            path = full + path[len(short) :]
             break
     for token in re.findall(r"[^.\[\]]+|\[\d+\]", path):
         obj = obj[int(token[1:-1])] if token.startswith("[") else obj[token]

@@ -26,8 +26,11 @@ def respond(envelope: dict[str, Any]) -> dict[str, Any]:
     }
 
     if envelope["flags"]["is_group"]:
-        return {**base, "kind": "clarification",
-                "text": "I only handle requests in a direct message for now. Please message me directly."}
+        return {
+            **base,
+            "kind": "clarification",
+            "text": "I only handle requests in a direct message for now. Please message me directly.",
+        }
 
     rejected = [a for a in envelope["attachments"] if a["validation"] == "rejected"]
     if rejected:
