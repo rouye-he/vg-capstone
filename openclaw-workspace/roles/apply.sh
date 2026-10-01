@@ -3,7 +3,7 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p ~/.openclaw/skills ~/.openclaw/workspace/data
-for s in meeting-scheduler expense-ledger; do rm -rf ~/.openclaw/skills/$s; cp -R "$HERE/skills/$s" ~/.openclaw/skills/; done
+for s in meeting-scheduler expense-ledger issue-tracker; do rm -rf ~/.openclaw/skills/$s; cp -R "$HERE/skills/$s" ~/.openclaw/skills/; done
 rm -rf ~/.openclaw/workspace/skills/meeting-scheduler      # now lives in the shared root
 cp "$HERE"/data/*.json ~/.openclaw/workspace/data/
 cp "$HERE/workspaces/main/SOUL.md" ~/.openclaw/workspace/SOUL.md

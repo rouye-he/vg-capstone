@@ -1,0 +1,11 @@
+{
+  "_note": "Synthetic engineering issue tracker for the capstone demo. Stand-in for GitHub issues until gh is authenticated.",
+  "repo": "enterprise-team/openclaw-imessage",
+  "issues": [
+    {"id": 101, "title": "iMessage auto-reply fails on OpenClaw 2026.9.7", "status": "open", "priority": "P1", "assignee": "Alex Chen", "labels": ["bug", "imessage"], "created": "2026-09-30", "body": "Final reply rejected by durable-delivery guard. Workaround: send via message tool."},
+    {"id": 102, "title": "Add HEIC to JPEG conversion for attachments", "status": "open", "priority": "P2", "assignee": "Sam Okafor", "labels": ["enhancement", "attachments"], "created": "2026-09-28", "body": "TC-10 expects processing_hint convert_to_jpeg."},
+    {"id": 103, "title": "Pairing notice should be customizable", "status": "open", "priority": "P3", "assignee": null, "labels": ["enhancement"], "created": "2026-09-30", "body": "Owner wants a plain 'not authorized' text."},
+    {"id": 104, "title": "Group chat support (MVP disables groups)", "status": "open", "priority": "P3", "assignee": null, "labels": ["enhancement", "groups"], "created": "2026-09-25", "body": "Revisit after Phase 1."},
+    {"id": 105, "title": "Simulator raw-event mode", "status": "closed", "priority": "P2", "assignee": "Richard Zhu", "labels": ["simulator"], "created": "2026-09-29", "body": "Done, 10/10 scenarios."}
+  ]
+}
